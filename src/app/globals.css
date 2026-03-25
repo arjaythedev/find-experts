@@ -1,0 +1,57 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-bureau-sans), system-ui, -apple-system, sans-serif;
+  --font-serif: var(--font-bureau-serif), Georgia, "Times New Roman", serif;
+  --color-navy-950: #080c28;
+  --color-navy-900: #101531;
+  --color-navy-800: #1e2542;
+  --color-navy-700: #333a5a;
+  --color-navy-600: #333a5a;
+  --color-navy-500: #8da5ff;
+  --color-navy-400: #8da5ff;
+  --color-navy-300: #b2d3fa;
+  --color-navy-200: #d2dfff;
+  --color-navy-100: #deefff;
+  --color-navy-50: #f7fbff;
+  --color-lime: #cdff92;
+  --color-lime-dim: #9dcc6a;
+  --color-lime-bright: #e0ffb8;
+  --color-brand-blue: #0e88ff;
+  --color-brand-blue-light: #7cbeff;
+  --color-brand-mist: #eceff5;
+}
+
+body {
+  background: var(--color-navy-950);
+  color: #f7fbff;
+  font-family: var(--font-bureau-sans), system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.dither-overlay {
+  background: linear-gradient(
+    to right,
+    rgba(100, 120, 180, 0.06) 0%,
+    rgba(100, 120, 180, 0.3) 100%
+  );
+  mask-image: url("/dither.svg");
+  -webkit-mask-image: url("/dither.svg");
+  mask-size: cover;
+  -webkit-mask-size: cover;
+  mask-repeat: no-repeat;
+  -webkit-mask-repeat: no-repeat;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-navy-950);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-navy-700);
+  border-radius: 3px;
+}
