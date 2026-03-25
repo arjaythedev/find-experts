@@ -99,7 +99,7 @@ export function LandingPage() {
     .filter(Boolean);
 
   return (
-    <div className="min-h-screen flex flex-col relative overflow-hidden">
+    <div className={`min-h-screen flex flex-col relative overflow-hidden ${view === "landing" ? "h-screen overflow-y-hidden" : ""}`}>
       <BackgroundGrid />
 
       {/* Navbar */}
@@ -126,6 +126,7 @@ export function LandingPage() {
 
       {/* Main content */}
       <div className="relative z-10 flex-none border-l border-r border-navy-700 max-w-[1100px] mx-auto w-full mt-[72px] bg-navy-950">
+        {view === "landing" && <ExpertCarousel />}
         <AnimatePresence mode="wait">
           {view === "landing" ? (
             <motion.div
@@ -136,28 +137,27 @@ export function LandingPage() {
               transition={{ duration: 0.3 }}
             >
               {/* Hero with Expert Carousel behind */}
-              <section className="relative pt-20 sm:pt-28 pb-8 px-6">
-                <ExpertCarousel />
-                <div className="relative z-10 max-w-[760px] mx-auto text-center">
+              <section className="relative pt-6 sm:pt-8 pb-4 px-6">
+                <div className="relative z-10 max-w-[560px] mx-auto text-center bg-navy-950/70 backdrop-blur-md rounded-2xl py-6 px-6">
                   <motion.h1
                     initial={{ opacity: 0, y: 24 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.1, duration: 0.6 }}
-                    className="text-[48px] sm:text-[72px] font-light font-serif text-white leading-[1.1] tracking-[-2.88px]"
+                    className="text-[42px] sm:text-[58px] font-light font-serif text-white leading-[1.1] tracking-[-2.4px]"
                     style={{ fontFeatureSettings: "'ss01' 1" }}
                   >
-                    Learn from humans.{" "}
-                    <span className="text-lime">Find your experts.</span>
+                    Learn from humans.
+                    <br />
+                    <span className="text-lime">Find the right expert.</span>
                   </motion.h1>
 
                   <motion.p
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.25, duration: 0.5 }}
-                    className="mt-6 text-lg sm:text-xl text-white/80 leading-[1.6] max-w-[560px] mx-auto"
+                    className="mt-4 text-base sm:text-lg text-white/70 leading-[1.6] max-w-[480px] mx-auto"
                   >
-                    Select your role, and we&apos;ll show you the top experts
-                    who can take your skills further.
+                    400+ experts from OpenAI, Anthropic, Clay, and Stripe teach on Maven. We&apos;ll help you find the right experts and the right topics, from vibe coding to GTM engineering.
                   </motion.p>
                 </div>
               </section>
@@ -168,9 +168,9 @@ export function LandingPage() {
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.35, duration: 0.5 }}
-                  className="max-w-[760px] mx-auto"
+                  className="max-w-[560px] mx-auto"
                 >
-                  <div className="mb-5" />
+                  <div className="mb-2" />
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                     {JOB_FAMILIES.map((fam, i) => {
                       const selected = selectedFamilies.has(fam.id);
@@ -291,7 +291,7 @@ export function LandingPage() {
                       `}
                       style={{ fontFeatureSettings: "'ss01' 1" }}
                     >
-                      Go
+                      Match me
                       <ArrowRight className="w-5 h-5" />
                     </button>
                   </div>

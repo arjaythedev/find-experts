@@ -3,81 +3,79 @@
 import { useEffect, useRef } from "react";
 import { EXPERTS } from "@/data/experts";
 
-// Top experts by signup count for the carousel
-const TOP_EXPERTS = EXPERTS.slice(0, 40);
+const TOP_EXPERTS = EXPERTS.slice(0, 20);
 
-// Split into four rows for bidirectional scrolling
-const ROW_1 = TOP_EXPERTS.slice(0, 10);
-const ROW_2 = TOP_EXPERTS.slice(10, 20);
-const ROW_3 = TOP_EXPERTS.slice(20, 30);
-const ROW_4 = TOP_EXPERTS.slice(30, 40);
+const COL_LEFT = TOP_EXPERTS.slice(0, 10);
+const COL_RIGHT = TOP_EXPERTS.slice(10, 20);
 
 function ExpertPill({ name, title, imgUrl }: { name: string; title: string; imgUrl: string }) {
   return (
-    <div className="flex items-center gap-4 px-6 py-4 rounded-full border border-navy-700/60 bg-navy-900/40 backdrop-blur-sm shrink-0 max-w-[420px]">
+    <div className="flex items-center gap-3 px-4 py-3 rounded-xl border border-navy-700/60 bg-navy-900/40 backdrop-blur-sm shrink-0">
       <img
         src={imgUrl}
         alt={name}
-        className="w-12 h-12 rounded-full object-cover border border-navy-700 shrink-0"
+        className="w-10 h-10 rounded-full object-cover border border-navy-700 shrink-0"
         loading="lazy"
       />
-      <div className="min-w-0">
-        <p className="text-base font-medium text-white/70 truncate">{name}</p>
-        <p className="text-sm text-white/40 truncate">{title}</p>
+      <div className="min-w-0 flex-1">
+        <p className="text-sm font-medium text-white/70 truncate">{name}</p>
+        <p className="text-xs text-white/40 line-clamp-2 leading-[1.4]">{title}</p>
       </div>
     </div>
   );
 }
 
-function ScrollRow({
+function ScrollColumn({
   experts,
   direction,
   speed,
 }: {
-  experts: typeof ROW_1;
-  direction: "left" | "right";
+  experts: typeof COL_LEFT;
+  direction: "up" | "down";
   speed: number;
 }) {
-  const rowRef = useRef<HTMLDivElement>(null);
+  const colRef = useRef<HTMLDivElement>(null);
   const posRef = useRef(0);
   const rafRef = useRef<number>(0);
 
   useEffect(() => {
-    const el = rowRef.current;
+    const el = colRef.current;
     if (!el) return;
 
-    // Duplicate content width for seamless loop
-    const contentWidth = el.scrollWidth / 2;
+    const contentHeight = el.scrollHeight / 2;
 
     const animate = () => {
-      if (direction === "left") {
+      if (direction === "up") {
         posRef.current -= speed;
-        if (posRef.current <= -contentWidth) posRef.current += contentWidth;
+        if (posRef.current <= -contentHeight) posRef.current += contentHeight;
       } else {
         posRef.current += speed;
-        if (posRef.current >= 0) posRef.current -= contentWidth;
+        if (posRef.current >= 0) posRef.current -= contentHeight;
       }
-      el.style.transform = `translateX(${posRef.current}px)`;
+      el.style.transform = `translateY(${posRef.current}px)`;
       rafRef.current = requestAnimationFrame(animate);
     };
 
-    // Start right row offset
-    if (direction === "right") {
-      posRef.current = -contentWidth;
+    if (direction === "down") {
+      posRef.current = -contentHeight;
     }
 
     rafRef.current = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(rafRef.current);
   }, [direction, speed]);
 
-  // Double the items for seamless loop
   const doubled = [...experts, ...experts];
 
   return (
-    <div className="overflow-hidden">
-      <div ref={rowRef} className="flex gap-3 will-change-transform">
+    <div className="overflow-hidden h-full w-full">
+      <div ref={colRef} className="flex flex-col gap-3 will-change-transform">
         {doubled.map((expert, i) => (
-          <ExpertPill key={`${expert.name}-${i}`} name={expert.name} title={expert.title} imgUrl={expert.imgUrl} />
+          <ExpertPill
+            key={`${expert.name}-${i}`}
+            name={expert.name}
+            title={expert.title}
+            imgUrl={expert.imgUrl}
+          />
         ))}
       </div>
     </div>
@@ -86,11 +84,15 @@ function ScrollRow({
 
 export function ExpertCarousel() {
   return (
-    <div className="absolute inset-x-0 top-[-80px] bottom-[-120px] flex flex-col justify-center gap-4 pointer-events-none opacity-[0.65] overflow-hidden">
-      <ScrollRow experts={ROW_1} direction="left" speed={0.3} />
-      <ScrollRow experts={ROW_2} direction="right" speed={0.25} />
-      <ScrollRow experts={ROW_3} direction="left" speed={0.28} />
-      <ScrollRow experts={ROW_4} direction="right" speed={0.22} />
-    </div>
+    <>
+      {/* Left column */}
+      <div className="absolute left-3 top-0 bottom-0 w-[240px] pointer-events-none opacity-[0.65] overflow-hidden hidden lg:block z-[5]">
+        <ScrollColumn experts={COL_LEFT} direction="up" speed={0.3} />
+      </div>
+      {/* Right column */}
+      <div className="absolute right-3 top-0 bottom-0 w-[240px] pointer-events-none opacity-[0.65] overflow-hidden hidden lg:block z-[5]">
+        <ScrollColumn experts={COL_RIGHT} direction="down" speed={0.25} />
+      </div>
+    </>
   );
 }
